@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React from 'react';
 import PropTypes from 'prop-types';
 import './styles/Tile.css';
@@ -30,10 +31,6 @@ Tile.propTypes = {
   colors: PropTypes.arrayOf(PropTypes.string).isRequired,
   onSelect: PropTypes.func,
   disabled: PropTypes.bool.isRequired,
-};
-
-Tile.defaultProps = {
-  onSelect: () => {},
 };
 
 export default Tile;
