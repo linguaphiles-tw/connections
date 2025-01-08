@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Tile from './Tile';
+import ActionButton from './ActionButton';
 import './styles/Game.css';
 
 function Game({ tilesData }) {
@@ -8,9 +9,12 @@ function Game({ tilesData }) {
   const [lives, setLives] = useState(5);
   const [status, setStatus] = useState('playing');
   const [matchedTiles, setMatchedTiles] = useState([]);
+  const [submittedSelections, setSubmittedSelections] = useState([]);
+  const [shuffledTiles, setShuffledTiles] = useState(tilesData);
 
-  // select or deselect tile if not matched
   const handleTileSelect = (tile) => {
+    if (status === 'lost') return;
+
     if (selectedTiles.includes(tile)) {
       setSelectedTiles(selectedTiles.filter((t) => t !== tile));
     } else if (!matchedTiles.includes(tile)) {
@@ -34,7 +38,6 @@ function Game({ tilesData }) {
     if (selectedTiles.length === 4) {
       if (isCorrectMatch(selectedTiles)) {
         setMatchedTiles([...matchedTiles, ...selectedTiles]);
-        setSelectedTiles([]);
         if (matchedTiles.length + 4 === tilesData.length) {
           setStatus('won');
         }
@@ -46,13 +49,27 @@ function Game({ tilesData }) {
           }
           return newLives;
         });
-        setSelectedTiles([]);
       }
+      setSubmittedSelections([...submittedSelections, selectedTiles]);
+      setSelectedTiles([]);
     }
   };
 
+  const handleSubmit = () => {
+    checkSelection();
+  };
+
+  const handleShuffle = () => {
+    const unmatchedTiles = shuffledTiles.filter((tile) => !matchedTiles.includes(tile));
+    const shuffledUnmatched = unmatchedTiles.sort(() => Math.random() - 0.5);
+    setShuffledTiles([...matchedTiles, ...shuffledUnmatched]);
+  };
+
+  const handleDeselectAll = () => {
+    setSelectedTiles([]);
+  };
+
   const getTileColors = (tile) => {
-    // return background and font color for tiles
     if (matchedTiles.includes(tile)) {
       return tile.colors;
     }
@@ -62,31 +79,48 @@ function Game({ tilesData }) {
     return ['#efefe6', '#000'];
   };
 
-  useEffect(() => {
-    checkSelection();
-  }, [selectedTiles]);
-
   return (
     <div className="container">
       <h1 className="game_title">Clonections</h1>
+      <div>
+        Create four groups of four!
+      </div>
       <div className="grid">
-        {tilesData.map((tile) => (
+        {shuffledTiles.map((tile) => (
           <Tile
             key={tile.word}
             word={tile.word}
             colors={getTileColors(tile)}
             onSelect={() => handleTileSelect(tile)}
-            disabled={matchedTiles.includes(tile)}
+            disabled={matchedTiles.includes(tile) || status === 'lost'}
           />
         ))}
       </div>
       <div>
-        current status:&nbsp;
-        {status}
-      </div>
-      <div>
+        Mistakes Remaining:&nbsp;
         {lives}
-        &nbsp;lives
+      </div>
+      {/* Shuffle, Deselect all, and Submit */}
+      <div className="actionButtonGrid">
+        <ActionButton
+          onClick={handleShuffle}
+          disabled={status !== 'playing'}
+        >
+          Shuffle
+        </ActionButton>
+        <ActionButton
+          onClick={handleDeselectAll}
+          className="deselect_all_button"
+          disabled={selectedTiles.length < 1 || status === 'lost'}
+        >
+          Deselect All
+        </ActionButton>
+        <ActionButton
+          onClick={handleSubmit}
+          disabled={selectedTiles.length !== 4 || status === 'lost'}
+        >
+          Submit
+        </ActionButton>
       </div>
     </div>
   );

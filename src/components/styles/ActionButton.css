@@ -1,0 +1,30 @@
+.action_button {
+  font-family: 'Franklin Gothic Medium', Arial;
+  font-size: 16px;
+  font-weight: 600;
+  padding:20px;
+  display: flex;
+  width:inherit;
+  min-width: 5.5em;
+  height: 3em;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  max-width: 80vw;
+  border-radius: 32px;
+  line-height: 1.5em;
+  cursor: pointer;
+  border: 1px solid;
+  border-color: var(--stroke);
+  background-color: var(--bg-page);
+  color: var(--text);
+}
+
+.action_button:active {
+  transform: scale(0.95);
+}
+
+.action_button.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
