@@ -1,26 +1,35 @@
 .container {
-	width: 624px;
-	height: 344px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+  width: 624px;
+  height: 344px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .game_title {
-	font-family: "Ultra", serif;
-	font-weight: 400;
-	font-style: normal;
-	margin-right: 16px;
-	font-size: 37px;
-	padding-top: 10px;
+  font-family: "Ultra", serif;
+  font-weight: 400;
+  font-style: normal;
+  margin-right: 16px;
+  font-size: 37px;
+  padding-top: 10px;
 }
 
 .grid {
-	height: 100%;
-	display: grid;
-	grid-template-columns: repeat(4, 150px);
-	grid-template-rows: repeat(4, 80px);
-	gap: 8px;
-	box-sizing: border-box;
-	align-items: center;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 150px);
+  grid-template-rows: repeat(4, 80px);
+  gap: 8px;
+  box-sizing: border-box;
+  align-items: center;
+  margin: 20px;
+}
+
+.actionButtonGrid {
+  box-sizing: border-box;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
 }
