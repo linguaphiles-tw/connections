@@ -6,12 +6,17 @@ import './styles/Game.css';
 
 function Game({ tilesData }) {
   const [selectedTiles, setSelectedTiles] = useState([]);
-  const [lives, setLives] = useState(5);
+  const [mistakes, setMistakes] = useState(5);
   const [status, setStatus] = useState('playing');
   const [matchedTiles, setMatchedTiles] = useState([]);
   const [submittedSelections, setSubmittedSelections] = useState([]);
   const [shuffledTiles, setShuffledTiles] = useState(tilesData);
 
+  /*
+  Allow tile to be selected if not a matched tile
+  and less than 4 tiles have been selected
+  and deselect tile if already selecte
+  */
   const handleTileSelect = (tile) => {
     if (status === 'lost') return;
 
@@ -24,6 +29,7 @@ function Game({ tilesData }) {
     }
   };
 
+  // TODO: handle case when 3/4 tiles are matching
   const isCorrectMatch = (tiles) => {
     if (tiles.length !== 4) return false;
     const { theme } = tiles[0];
@@ -34,20 +40,22 @@ function Game({ tilesData }) {
     return true;
   };
 
+  // TODO: check if current tiles have already been selected
   const checkSelection = () => {
     if (selectedTiles.length === 4) {
       if (isCorrectMatch(selectedTiles)) {
         setMatchedTiles([...matchedTiles, ...selectedTiles]);
+        // *** double check
         if (matchedTiles.length + 4 === tilesData.length) {
           setStatus('won');
         }
       } else {
-        setLives((prevLives) => {
-          const newLives = prevLives - 1;
-          if (newLives === 0) {
+        setMistakes((prevMistakes) => {
+          const newMistakes = prevMistakes - 1;
+          if (newMistakes === 0) {
             setStatus('lost');
           }
-          return newLives;
+          return newMistakes;
         });
       }
       setSubmittedSelections([...submittedSelections, selectedTiles]);
@@ -55,10 +63,11 @@ function Game({ tilesData }) {
     }
   };
 
-  const handleSubmit = () => {
-    checkSelection();
-  };
+  // const handleSubmit = () => {
+  //   checkSelection();
+  // };
 
+  // Action button handling (Submit, Shuffle, Deselect all)
   const handleShuffle = () => {
     const unmatchedTiles = shuffledTiles.filter((tile) => !matchedTiles.includes(tile));
     const shuffledUnmatched = unmatchedTiles.sort(() => Math.random() - 0.5);
@@ -69,6 +78,7 @@ function Game({ tilesData }) {
     setSelectedTiles([]);
   };
 
+  // Change color of tiles when selected
   const getTileColors = (tile) => {
     if (matchedTiles.includes(tile)) {
       return tile.colors;
@@ -85,6 +95,7 @@ function Game({ tilesData }) {
       <div>
         Create four groups of four!
       </div>
+      {/* Grid of word tiles */}
       <div className="grid">
         {shuffledTiles.map((tile) => (
           <Tile
@@ -96,9 +107,10 @@ function Game({ tilesData }) {
           />
         ))}
       </div>
+      {/* TODO: add dots for each mistake remaining */}
       <div>
         Mistakes Remaining:&nbsp;
-        {lives}
+        {mistakes}
       </div>
       {/* Shuffle, Deselect all, and Submit */}
       <div className="actionButtonGrid">
@@ -116,7 +128,7 @@ function Game({ tilesData }) {
           Deselect All
         </ActionButton>
         <ActionButton
-          onClick={handleSubmit}
+          onClick={checkSelection}
           disabled={selectedTiles.length !== 4 || status === 'lost'}
         >
           Submit
