@@ -7,12 +7,7 @@
 
 # TODO:
 - [ ] Shuffle the tiles at the start of the game
-- [x] Add the right colors to the matched tiles
-- [ ] Implement a submit button to submit 4 selected tiles for validation
-- [ ] Implement a shuffle button to shuffle the remaining tiles
-- [ ] Implement deselect button to deselect the selected tiles
 - [ ] If 3/4 tiles selected are matching, keep those tiles selected and display hint that the user is '1 tile away'
-- [ ] Display and update the lives status
 - [ ] Show the correct matches after the user has lost
 - [ ] Provide option to move on to another game with different tiles after completing the current game
 - [ ] Add animation for tile matching
@@ -50,11 +45,11 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### 'npm run lint'
+### `npm run lint`
 
 Runs ESLint. 
 
-### 'npm run lint:fix'
+### `npm run lint:fix`
 
 Fixes ESLint errors that can be fixed automatically.
 
