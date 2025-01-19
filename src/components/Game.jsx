@@ -9,6 +9,13 @@ function Game({ tilesData }) {
   const [mistakes, setMistakes] = useState(5);
   const [status, setStatus] = useState('playing');
   const [matchedTiles, setMatchedTiles] = useState([]);
+  const [message, setMessage] = useState('');
+  /*
+  Note: for each submitted section, the actual game saves the following:
+  - correct (bool)
+  - cards (i.e. "1,2,3,4")
+  - solved level (0-4)
+  */
   const [submittedSelections, setSubmittedSelections] = useState([]);
   const [shuffledTiles, setShuffledTiles] = useState(tilesData);
 
@@ -40,18 +47,38 @@ function Game({ tilesData }) {
     return true;
   };
 
+  // Check if the words in two arrays are equal
+  const arraysEqual = (arr1, arr2) => {
+    if (arr1.length !== arr2.length) return false;
+
+    const extractWords = (arr) => arr.map((item) => item.word);
+
+    const sortedWords1 = extractWords(arr1).sort();
+    const sortedWords2 = extractWords(arr2).sort();
+
+    return sortedWords1.every((word, index) => word === sortedWords2[index]);
+  };
+
   // TODO: check if current tiles have already been selected
   const checkSelection = () => {
     if (selectedTiles.length === 4) {
+      // Check if the current selection has already been submitted
+      if (submittedSelections.some((selection) => arraysEqual(selection, selectedTiles))) {
+        setMessage('already selected!');
+        setSelectedTiles([]);
+        return;
+      }
+
       if (isCorrectMatch(selectedTiles)) {
         setMatchedTiles([...matchedTiles, ...selectedTiles]);
-        // *** double check
+        // if all tiles are matched, game is won
         if (matchedTiles.length + 4 === tilesData.length) {
           setStatus('won');
         }
       } else {
         setMistakes((prevMistakes) => {
           const newMistakes = prevMistakes - 1;
+          // if no mistakes remaining, game is lost
           if (newMistakes === 0) {
             setStatus('lost');
           }
@@ -60,12 +87,9 @@ function Game({ tilesData }) {
       }
       setSubmittedSelections([...submittedSelections, selectedTiles]);
       setSelectedTiles([]);
+      setMessage('');
     }
   };
-
-  // const handleSubmit = () => {
-  //   checkSelection();
-  // };
 
   // Action button handling (Submit, Shuffle, Deselect all)
   const handleShuffle = () => {
@@ -112,6 +136,7 @@ function Game({ tilesData }) {
         Mistakes Remaining:&nbsp;
         {mistakes}
       </div>
+      {message && <div className="message">{message}</div>}
       {/* Shuffle, Deselect all, and Submit */}
       <div className="actionButtonGrid">
         <ActionButton
