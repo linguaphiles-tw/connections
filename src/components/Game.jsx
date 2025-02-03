@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Tile from './Tile';
 import ActionButton from './ActionButton';
@@ -10,14 +10,21 @@ function Game({ tilesData }) {
   const [status, setStatus] = useState('playing');
   const [matchedTiles, setMatchedTiles] = useState([]);
   const [message, setMessage] = useState('');
+  const [submittedSelections, setSubmittedSelections] = useState([]);
+  const [shuffledTiles, setShuffledTiles] = useState([]);
+
   /*
   Note: for each submitted section, the actual game saves the following:
   - correct (bool)
   - cards (i.e. "1,2,3,4")
   - solved level (0-4)
   */
-  const [submittedSelections, setSubmittedSelections] = useState([]);
-  const [shuffledTiles, setShuffledTiles] = useState(tilesData);
+
+  // Shuffle tiles upon render
+  useEffect(() => {
+    const shuffleArray = (array) => array.sort(() => Math.random() - 0.5);
+    setShuffledTiles(shuffleArray([...tilesData]));
+  }, [tilesData]);
 
   /*
   Allow tile to be selected if not a matched tile
@@ -47,7 +54,6 @@ function Game({ tilesData }) {
     return true;
   };
 
-  // Check if the words in two arrays are equal
   const arraysEqual = (arr1, arr2) => {
     if (arr1.length !== arr2.length) return false;
 
@@ -58,6 +64,8 @@ function Game({ tilesData }) {
 
     return sortedWords1.every((word, index) => word === sortedWords2[index]);
   };
+
+  const reorderTiles = (matched, unmatched) => [...matched, ...unmatched];
 
   // TODO: check if current tiles have already been selected
   const checkSelection = () => {
@@ -70,15 +78,18 @@ function Game({ tilesData }) {
       }
 
       if (isCorrectMatch(selectedTiles)) {
-        setMatchedTiles([...matchedTiles, ...selectedTiles]);
+        const newMatchedTiles = [...matchedTiles, ...selectedTiles];
+        setMatchedTiles(newMatchedTiles);
+        const unmatchedTiles = shuffledTiles.filter((tile) => !newMatchedTiles.includes(tile));
+        setShuffledTiles(reorderTiles(newMatchedTiles, unmatchedTiles));
+
         // if all tiles are matched, game is won
-        if (matchedTiles.length + 4 === tilesData.length) {
+        if (newMatchedTiles.length === tilesData.length) {
           setStatus('won');
         }
       } else {
         setMistakes((prevMistakes) => {
           const newMistakes = prevMistakes - 1;
-          // if no mistakes remaining, game is lost
           if (newMistakes === 0) {
             setStatus('lost');
           }
@@ -95,7 +106,7 @@ function Game({ tilesData }) {
   const handleShuffle = () => {
     const unmatchedTiles = shuffledTiles.filter((tile) => !matchedTiles.includes(tile));
     const shuffledUnmatched = unmatchedTiles.sort(() => Math.random() - 0.5);
-    setShuffledTiles([...matchedTiles, ...shuffledUnmatched]);
+    setShuffledTiles(reorderTiles(matchedTiles, shuffledUnmatched));
   };
 
   const handleDeselectAll = () => {
