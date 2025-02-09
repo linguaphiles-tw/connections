@@ -65,9 +65,9 @@ function Game({ tilesData }) {
     return sortedWords1.every((word, index) => word === sortedWords2[index]);
   };
 
+  // TODO: display theme of matched tiles
   const reorderTiles = (matched, unmatched) => [...matched, ...unmatched];
 
-  // TODO: check if current tiles have already been selected
   const checkSelection = () => {
     if (selectedTiles.length === 4) {
       // Check if the current selection has already been submitted

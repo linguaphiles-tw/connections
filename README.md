@@ -4,15 +4,14 @@
 
 <img width="697" alt="Screenshot 2024-08-25 at 9 00 03 PM" src="https://github.com/user-attachments/assets/43688ae7-8483-4833-b2f4-dd93c63b916b">
 
-
 # TODO:
-- [ ] Shuffle the tiles at the start of the game
+
 - [ ] If 3/4 tiles selected are matching, keep those tiles selected and display hint that the user is '1 tile away'
+- [ ] Display theme of matched tiles
 - [ ] Show the correct matches after the user has lost
 - [ ] Provide option to move on to another game with different tiles after completing the current game
 - [ ] Add animation for tile matching
 - [ ] Add animation for selecting wrong group of tiles
-
 
 # Getting Started with Create React App
 
@@ -47,9 +46,8 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ### `npm run lint`
 
-Runs ESLint. 
+Runs ESLint.
 
 ### `npm run lint:fix`
 
 Fixes ESLint errors that can be fixed automatically.
-
