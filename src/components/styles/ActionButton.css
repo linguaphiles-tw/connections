@@ -2,15 +2,15 @@
   font-family: 'Franklin Gothic Medium', Arial;
   font-size: 16px;
   font-weight: 600;
-  padding:20px;
+  padding: 20px;
   display: flex;
-  width:inherit;
+  width: inherit;
   min-width: 5.5em;
+  max-width: 80vw;
   height: 3em;
   text-align: center;
   justify-content: center;
   align-items: center;
-  max-width: 80vw;
   border-radius: 32px;
   line-height: 1.5em;
   cursor: pointer;
@@ -27,4 +27,12 @@
 .action_button.disabled {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+@media (max-width: 600px) {
+  .action_button {
+    font-size: 14px;
+    padding: 8px 16px;
+    height: 3em;
+  }
 }
