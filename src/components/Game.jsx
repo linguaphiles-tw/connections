@@ -20,10 +20,19 @@ function Game({ tilesData }) {
   - solved level (0-4)
   */
 
+  // Fisher-Yates shuffle algorithm
+  const shuffleTiles = (arr) => {
+    const shuffledArray = [...arr];
+    for (let i = shuffledArray.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+    return shuffledArray;
+  };
+
   // Shuffle tiles upon render
   useEffect(() => {
-    const shuffleArray = (array) => array.sort(() => Math.random() - 0.5);
-    setShuffledTiles(shuffleArray([...tilesData]));
+    setShuffledTiles(shuffleTiles([...tilesData]));
   }, [tilesData]);
 
   /*
@@ -105,7 +114,7 @@ function Game({ tilesData }) {
   // Action button handling (Submit, Shuffle, Deselect all)
   const handleShuffle = () => {
     const unmatchedTiles = shuffledTiles.filter((tile) => !matchedTiles.includes(tile));
-    const shuffledUnmatched = unmatchedTiles.sort(() => Math.random() - 0.5);
+    const shuffledUnmatched = shuffleTiles(unmatchedTiles);
     setShuffledTiles(reorderTiles(matchedTiles, shuffledUnmatched));
   };
 
