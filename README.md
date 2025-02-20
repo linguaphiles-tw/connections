@@ -2,7 +2,8 @@
 
 ⚠️ **Note:** This project is currently a work in progress!
 
-<img width="697" alt="Screenshot 2024-08-25 at 9 00 03 PM" src="https://github.com/user-attachments/assets/43688ae7-8483-4833-b2f4-dd93c63b916b">
+<img width="702" alt="Screenshot 2025-02-19 at 8 18 01 PM" src="https://github.com/user-attachments/assets/956b709e-c317-49bd-bb6e-e627ef5c0d59" />
+
 
 # TODO:
 
@@ -13,13 +14,7 @@
 - [ ] Add animation for tile matching
 - [ ] Add animation for selecting wrong group of tiles
 
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
 ## Available Scripts
-
-In the project directory, you can run:
 
 ### `npm start`
 
@@ -50,4 +45,4 @@ Runs ESLint.
 
 ### `npm run lint:fix`
 
-Fixes ESLint errors that can be fixed automatically.
+Fixes errors identified by ESLint. 
