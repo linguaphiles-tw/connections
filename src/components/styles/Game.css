@@ -37,6 +37,24 @@
   margin-top: 20px;
 }
 
+.mistakesContent {
+  display: flex;
+  align-items: center;
+}
+
+.mistakesRemaining {
+  display: flex;
+  min-width: 120px;
+  gap: 10px;
+}
+
+.circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 9999px;
+  background-color: #5a594e;
+}
+
 @media (max-width: 600px) {
   .game_title {
     font-size: 1.5em;

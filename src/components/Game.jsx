@@ -6,7 +6,7 @@ import './styles/Game.css';
 
 function Game({ tilesData }) {
   const [selectedTiles, setSelectedTiles] = useState([]);
-  const [mistakes, setMistakes] = useState(5);
+  const [mistakes, setMistakes] = useState(4);
   const [status, setStatus] = useState('playing');
   const [matchedTiles, setMatchedTiles] = useState([]);
   const [message, setMessage] = useState('');
@@ -151,11 +151,27 @@ function Game({ tilesData }) {
           />
         ))}
       </div>
-      {/* TODO: add dots for each mistake remaining */}
-      <div>
-        Mistakes Remaining:&nbsp;
-        {mistakes}
+
+      {/* <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ position: 'absolute', left: '580px' }}>Mistakes Remaining:&nbsp;</div>
+        <div style={{ display: 'flex', marginLeft: '150px' }}>
+          {Array.from({ length: mistakes }, (_, index) => (
+            <span key={index} className="circle" />
+          ))}
+        </div>
+      </div> */}
+
+      <div className="mistakesWrapper">
+        <div className="mistakesContent">
+          Mistakes Remaining:&nbsp;
+          <span className="mistakesRemaining">
+            {Array.from({ length: mistakes }, (_, index) => (
+              <span key={index} className="circle" />
+            ))}
+          </span>
+        </div>
       </div>
+
       {message && <div className="message">{message}</div>}
       {/* Shuffle, Deselect all, and Submit */}
       <div className="actionButtonGrid">
@@ -179,6 +195,7 @@ function Game({ tilesData }) {
           Submit
         </ActionButton>
       </div>
+      {/* TODO: add button to move to next game */}
     </div>
   );
 }
