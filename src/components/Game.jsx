@@ -152,15 +152,6 @@ function Game({ tilesData }) {
         ))}
       </div>
 
-      {/* <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <div style={{ position: 'absolute', left: '580px' }}>Mistakes Remaining:&nbsp;</div>
-        <div style={{ display: 'flex', marginLeft: '150px' }}>
-          {Array.from({ length: mistakes }, (_, index) => (
-            <span key={index} className="circle" />
-          ))}
-        </div>
-      </div> */}
-
       <div className="mistakesWrapper">
         <div className="mistakesContent">
           Mistakes Remaining:&nbsp;

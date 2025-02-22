@@ -4,15 +4,17 @@
 
 <img width="702" alt="Screenshot 2025-02-19 at 8 18 01 PM" src="https://github.com/user-attachments/assets/956b709e-c317-49bd-bb6e-e627ef5c0d59" />
 
-
 # TODO:
 
 - [ ] If 3/4 tiles selected are matching, keep those tiles selected and display hint that the user is '1 tile away'
 - [ ] Display theme of matched tiles
 - [ ] Show the correct matches after the user has lost
 - [ ] Provide option to move on to another game with different tiles after completing the current game
-- [ ] Add animation for tile matching
-- [ ] Add animation for selecting wrong group of tiles
+- [ ] Keep tiles selected after wrong submission
+- [ ] Add animations for
+  - [ ] tile matching
+  - [ ] selecting wrong group of tiles
+  - [ ] losing remaining mistakes
 
 ## Available Scripts
 
@@ -45,4 +47,4 @@ Runs ESLint.
 
 ### `npm run lint:fix`
 
-Fixes errors identified by ESLint. 
+Fixes errors identified by ESLint.
