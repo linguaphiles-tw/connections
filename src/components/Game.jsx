@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Tile from './Tile';
 import ActionButton from './ActionButton';
@@ -11,7 +11,6 @@ function Game({ tilesData }) {
   const [matchedTiles, setMatchedTiles] = useState([]);
   const [message, setMessage] = useState('');
   const [submittedSelections, setSubmittedSelections] = useState([]);
-  const [shuffledTiles, setShuffledTiles] = useState([]);
 
   /*
   Note: for each submitted section, the actual game saves the following:
@@ -31,14 +30,12 @@ function Game({ tilesData }) {
   };
 
   // Shuffle tiles upon render
-  useEffect(() => {
-    setShuffledTiles(shuffleTiles([...tilesData]));
-  }, [tilesData]);
+  const [shuffledTiles, setShuffledTiles] = useState(() => shuffleTiles([...tilesData]));
 
   /*
   Allow tile to be selected if not a matched tile
-  and less than 4 tiles have been selected
-  and deselect tile if already selecte
+  and less than 4 tiles have been selected.
+  Deselect tile if already selected.
   */
   const handleTileSelect = (tile) => {
     if (status === 'lost') return;
