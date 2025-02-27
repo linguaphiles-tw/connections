@@ -10,7 +10,7 @@ let getMistakesCount;
 beforeEach(() => {
   render(<Game tilesData={mockTilesData} />);
   submitButton = screen.getByText('Submit');
-  getMistakesCount = () => document.querySelectorAll('.circle').length;
+  getMistakesCount = () => screen.queryAllByTestId('mistake').length;
 });
 
 test('Game renders tiles correctly', () => {
@@ -81,6 +81,7 @@ test('Game prevents tile selection when lost', () => {
 
   fireEvent.click(submitButton);
   expect(getMistakesCount()).toBe(3);
+  fireEvent.click(screen.getByText('Deselect All'));
 
   ['Cherry', 'Tiger', 'Banana', 'Elephant'].forEach((word) => {
     fireEvent.click(screen.getByText(word));
@@ -88,6 +89,7 @@ test('Game prevents tile selection when lost', () => {
 
   fireEvent.click(submitButton);
   expect(getMistakesCount()).toBe(2);
+  fireEvent.click(screen.getByText('Deselect All'));
 
   ['Apple', 'Giraffe', 'Date', 'Earth'].forEach((word) => {
     fireEvent.click(screen.getByText(word));
@@ -95,6 +97,7 @@ test('Game prevents tile selection when lost', () => {
 
   fireEvent.click(submitButton);
   expect(getMistakesCount()).toBe(1);
+  fireEvent.click(screen.getByText('Deselect All'));
 
   ['Tiger', 'Mars', 'Bus', 'Giraffe'].forEach((word) => {
     fireEvent.click(screen.getByText(word));
@@ -155,6 +158,9 @@ test('Game prevents resubmission of previously submitted tiles', () => {
 
   fireEvent.click(submitButton);
 
+  const deselectButton = screen.getByText('Deselect All');
+  fireEvent.click(deselectButton);
+
   expect(getMistakesCount()).toBe(3);
 
   // Try to resubmit the same set of tiles in same order
@@ -199,8 +205,6 @@ test('Game prevents resubmission of previously submitted tiles', () => {
   expect(getMistakesCount()).toBe(2);
 });
 
-// TODO: test shuffle functionality
-// TODO: test matched tiles moving to top of grid
 test('Matched tiles are moved to the top of the grid immediately after being matched', () => {
   // Select and submit a group of tiles to mark them as matched
   const matchedGroup = ['Apple', 'Banana', 'Cherry', 'Date'];
@@ -260,3 +264,8 @@ test('Shuffling only affects unmatched tiles and keeps matched tiles at the top'
   const unmatchedTilesAfterShuffle = tilesAfterShuffle.slice(matchedGroup.length);
   expect(unmatchedTilesAfterShuffle).not.toEqual(unmatchedTilesAfterMatch);
 });
+
+/* TODO tests
+- can't submit less than 4 tiles
+- tiles can be submitted on enter/space
+*/

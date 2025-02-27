@@ -89,7 +89,10 @@ function Game({ tilesData }) {
         const unmatchedTiles = shuffledTiles.filter((tile) => !newMatchedTiles.includes(tile));
         setShuffledTiles(reorderTiles(newMatchedTiles, unmatchedTiles));
 
-        // if all tiles are matched, game is won
+        // Clear selection after a correct match
+        setSelectedTiles([]);
+
+        // If all tiles are matched, game is won
         if (newMatchedTiles.length === tilesData.length) {
           setStatus('won');
         }
@@ -103,7 +106,6 @@ function Game({ tilesData }) {
         });
       }
       setSubmittedSelections([...submittedSelections, selectedTiles]);
-      setSelectedTiles([]);
       setMessage('');
     }
   };
@@ -154,7 +156,7 @@ function Game({ tilesData }) {
           Mistakes Remaining:&nbsp;
           <span className="mistakesRemaining">
             {Array.from({ length: mistakes }, (_, index) => (
-              <span key={index} className="circle" />
+              <span key={index} className="circle" data-testid="mistake" />
             ))}
           </span>
         </div>

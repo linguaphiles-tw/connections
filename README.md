@@ -10,11 +10,12 @@
 - [ ] Display theme of matched tiles
 - [ ] Show the correct matches after the user has lost
 - [ ] Provide option to move on to another game with different tiles after completing the current game
-- [ ] Keep tiles selected after wrong submission
 - [ ] Add animations for
   - [ ] tile matching
   - [ ] selecting wrong group of tiles
   - [ ] losing remaining mistakes
+- [ ] Add dark mode
+- [ ] Add confetti
 
 ## Available Scripts
 
