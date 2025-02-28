@@ -14,7 +14,6 @@
   - [ ] tile matching
   - [ ] selecting wrong group of tiles
   - [ ] losing remaining mistakes
-- [ ] Add dark mode
 - [ ] Add confetti
 
 ## Available Scripts

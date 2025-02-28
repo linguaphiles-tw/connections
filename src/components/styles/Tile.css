@@ -1,3 +1,17 @@
+:root {
+	--tile-bg: #efefe6;
+	--tile-color: #000;
+	--tile-disabled-opacity: 0.5;
+	--tile-active-scale: 0.95;
+}
+
+.dark-mode {
+	--tile-bg: #333;
+	--tile-color: #fff;
+	--tile-disabled-opacity: 0.3;
+	--tile-active-scale: 0.9;
+}
+
 .tile {
 	overflow: hidden;
 	display: flex;
@@ -5,7 +19,6 @@
 	width: 150px;
 	height: 80px;
 	min-width: 0;
-	display: flex;
 	justify-content: center;
 	align-content: center;
 	flex-wrap: wrap;
@@ -14,8 +27,8 @@
 	cursor: pointer;
 	font-weight: 700;
 	text-transform: uppercase;
-	background-color: #efefe6;
-	color: #000;
+	background-color: var(--tile-bg);
+	color: var(--tile-color);
 	z-index: 0;
 }
 	

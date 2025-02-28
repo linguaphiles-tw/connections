@@ -1,3 +1,19 @@
+:root {
+  --button-bg: #fff;
+  --button-color: #000;
+  --button-border: #ccc;
+  --button-active-scale: 0.95;
+  --button-disabled-opacity: 0.5;
+}
+
+.dark-mode {
+  --button-bg: #444;
+  --button-color: #fff;
+  --button-border: #666;
+  --button-active-scale: 0.9;
+  --button-disabled-opacity: 0.3;
+}
+
 .action_button {
   font-family: 'Franklin Gothic Medium', Arial;
   font-size: 16px;
@@ -14,10 +30,9 @@
   border-radius: 32px;
   line-height: 1.5em;
   cursor: pointer;
-  border: 1px solid;
-  border-color: var(--stroke);
-  background-color: var(--bg-page);
-  color: var(--text);
+  border: 1px solid var(--button-border);
+  background-color: var(--button-bg);
+  color: var(--button-color);
 }
 
 .action_button:active {

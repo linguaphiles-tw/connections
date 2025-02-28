@@ -1,11 +1,19 @@
+:root {
+  --circle-bg: #5a594e;
+}
+
+.dark-mode {
+  --circle-bg: #aaa;
+}
+
 .container {
   width: 624px;
   height: 344px;
   display: flex;
-  height: auto;
-  width: 100%;
   flex-direction: column;
   align-items: center;
+  background-color: var(--container-bg);
+  color: var(--container-color);
 }
 
 .game_title {
@@ -52,7 +60,7 @@
   width: 16px;
   height: 16px;
   border-radius: 9999px;
-  background-color: #5a594e;
+  background-color: var(--circle-bg);
 }
 
 @media (max-width: 600px) {

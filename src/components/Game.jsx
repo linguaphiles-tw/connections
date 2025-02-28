@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Tile from './Tile';
 import ActionButton from './ActionButton';
+import Toggle from './Toggle';
 import './styles/Game.css';
 
 function Game({ tilesData }) {
@@ -185,6 +186,8 @@ function Game({ tilesData }) {
           Submit
         </ActionButton>
       </div>
+      <Toggle />
+
       {/* TODO: add button to move to next game */}
     </div>
   );
