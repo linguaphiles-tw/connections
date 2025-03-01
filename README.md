@@ -48,3 +48,7 @@ Runs ESLint.
 ### `npm run lint:fix`
 
 Fixes errors identified by ESLint.
+
+# Acknowledgements 
+
+[Abbey Parini](https://abbeyperini.dev) for the dark mode toggle button!
