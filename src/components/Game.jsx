@@ -28,7 +28,10 @@ function Game({ tilesData }) {
     const shuffledArray = [...arr];
     for (let i = shuffledArray.length - 1; i > 0; i -= 1) {
       const j = Math.floor(Math.random() * (i + 1));
-      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+      [shuffledArray[i], shuffledArray[j]] = [
+        shuffledArray[j],
+        shuffledArray[i],
+      ];
     }
     return shuffledArray;
   };
@@ -43,6 +46,10 @@ function Game({ tilesData }) {
   */
   const handleTileSelect = (tile) => {
     if (status === 'lost') return;
+
+    if (status === 'wrong') {
+      setStatus('playing');
+    }
 
     if (selectedTiles.includes(tile)) {
       setSelectedTiles(selectedTiles.filter((t) => t !== tile));
@@ -83,7 +90,9 @@ function Game({ tilesData }) {
   const checkSelection = () => {
     if (selectedTiles.length === 4) {
       // Check if the current selection has already been submitted
-      if (submittedSelections.some((selection) => arraysEqual(selection, selectedTiles))) {
+      if (
+        submittedSelections.some((selection) => arraysEqual(selection, selectedTiles))
+      ) {
         setAlert({ type: 'error', status: true, title: 'Already selected!' });
         return;
       }
@@ -91,7 +100,9 @@ function Game({ tilesData }) {
       if (isCorrectMatch(selectedTiles)) {
         const newMatchedTiles = [...matchedTiles, ...selectedTiles];
         setMatchedTiles(newMatchedTiles);
-        const unmatchedTiles = shuffledTiles.filter((tile) => !newMatchedTiles.includes(tile));
+        const unmatchedTiles = shuffledTiles.filter(
+          (tile) => !newMatchedTiles.includes(tile),
+        );
         setShuffledTiles(reorderTiles(newMatchedTiles, unmatchedTiles));
 
         // Clear selection after a correct match
@@ -102,10 +113,13 @@ function Game({ tilesData }) {
           setStatus('won');
         }
       } else {
+        // Wrong selection
         setMistakes((prevMistakes) => {
           const newMistakes = prevMistakes - 1;
           if (newMistakes === 0) {
             setStatus('lost');
+          } else {
+            setStatus('wrong');
           }
           return newMistakes;
         });
@@ -116,7 +130,9 @@ function Game({ tilesData }) {
 
   // Action button handling (Submit, Shuffle, Deselect all)
   const handleShuffle = () => {
-    const unmatchedTiles = shuffledTiles.filter((tile) => !matchedTiles.includes(tile));
+    const unmatchedTiles = shuffledTiles.filter(
+      (tile) => !matchedTiles.includes(tile),
+    );
     const shuffledUnmatched = shuffleTiles(unmatchedTiles);
     setShuffledTiles(reorderTiles(matchedTiles, shuffledUnmatched));
   };
@@ -150,9 +166,7 @@ function Game({ tilesData }) {
   return (
     <div className="container">
       <h1 className="game_title">Clonections</h1>
-      <div>
-        Create four groups of four!
-      </div>
+      <div>Create four groups of four!</div>
 
       <Alert
         type={alert.type}
@@ -169,7 +183,7 @@ function Game({ tilesData }) {
             word={tile.word}
             colors={getTileColors(tile)}
             onSelect={() => handleTileSelect(tile)}
-            disabled={matchedTiles.includes(tile) || status !== 'playing'}
+            disabled={matchedTiles.includes(tile) || status === 'won' || status === 'lost'}
           />
         ))}
       </div>
@@ -187,22 +201,19 @@ function Game({ tilesData }) {
 
       {/* Shuffle, Deselect all, and Submit */}
       <div className="actionButtonGrid">
-        <ActionButton
-          onClick={handleShuffle}
-          disabled={status !== 'playing'}
-        >
+        <ActionButton onClick={handleShuffle} disabled={status === 'won' || status === 'lost'}>
           Shuffle
         </ActionButton>
         <ActionButton
           onClick={handleDeselectAll}
           className="deselect_all_button"
-          disabled={selectedTiles.length < 1 || status !== 'playing'}
+          disabled={selectedTiles.length < 1 || status === 'won' || status === 'lost'}
         >
           Deselect All
         </ActionButton>
         <ActionButton
           onClick={checkSelection}
-          disabled={selectedTiles.length !== 4 || status !== 'playing'}
+          disabled={selectedTiles.length !== 4 || status === 'won' || status === 'lost' || status === 'wrong'}
         >
           Submit
         </ActionButton>
