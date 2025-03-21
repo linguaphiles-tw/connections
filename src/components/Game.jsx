@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import Alert from 'reactjs-alert';
 import Tile from './Tile';
 import ActionButton from './ActionButton';
 import Toggle from './Toggle';
@@ -8,10 +9,12 @@ import './styles/Game.css';
 function Game({ tilesData }) {
   const [selectedTiles, setSelectedTiles] = useState([]);
   const [mistakes, setMistakes] = useState(4);
+  // possible statuses: playing, won, lost
   const [status, setStatus] = useState('playing');
   const [matchedTiles, setMatchedTiles] = useState([]);
-  const [message, setMessage] = useState('');
   const [submittedSelections, setSubmittedSelections] = useState([]);
+  // notify user if selection has already been submitted
+  const [alert, setAlert] = useState({ type: '', status: false, title: '' });
 
   /*
   Note: for each submitted section, the actual game saves the following:
@@ -51,6 +54,7 @@ function Game({ tilesData }) {
   };
 
   // TODO: handle case when 3/4 tiles are matching
+  // Checks if all 4 files match (have the same theme)
   const isCorrectMatch = (tiles) => {
     if (tiles.length !== 4) return false;
     const { theme } = tiles[0];
@@ -73,14 +77,14 @@ function Game({ tilesData }) {
   };
 
   // TODO: display theme of matched tiles
+  // List of matched tiles followed by unmatched tiles in grid
   const reorderTiles = (matched, unmatched) => [...matched, ...unmatched];
 
   const checkSelection = () => {
     if (selectedTiles.length === 4) {
       // Check if the current selection has already been submitted
       if (submittedSelections.some((selection) => arraysEqual(selection, selectedTiles))) {
-        setMessage('already selected!');
-        setSelectedTiles([]);
+        setAlert({ type: 'error', status: true, title: 'Already selected!' });
         return;
       }
 
@@ -107,7 +111,6 @@ function Game({ tilesData }) {
         });
       }
       setSubmittedSelections([...submittedSelections, selectedTiles]);
-      setMessage('');
     }
   };
 
@@ -133,12 +136,31 @@ function Game({ tilesData }) {
     return ['#efefe6', '#000'];
   };
 
+  // Display alert for 10 seconds when selection has already been made
+  useEffect(() => {
+    if (alert.status) {
+      const timer = setTimeout(() => {
+        setAlert({ ...alert, status: false });
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [alert]);
+
   return (
     <div className="container">
       <h1 className="game_title">Clonections</h1>
       <div>
         Create four groups of four!
       </div>
+
+      <Alert
+        type={alert.type}
+        status={alert.status}
+        title={alert.title}
+        Close={() => setAlert({ ...alert, status: false })}
+      />
+
       {/* Grid of word tiles */}
       <div className="grid">
         {shuffledTiles.map((tile) => (
@@ -147,7 +169,7 @@ function Game({ tilesData }) {
             word={tile.word}
             colors={getTileColors(tile)}
             onSelect={() => handleTileSelect(tile)}
-            disabled={matchedTiles.includes(tile) || status === 'lost'}
+            disabled={matchedTiles.includes(tile) || status !== 'playing'}
           />
         ))}
       </div>
@@ -163,7 +185,6 @@ function Game({ tilesData }) {
         </div>
       </div>
 
-      {message && <div className="message">{message}</div>}
       {/* Shuffle, Deselect all, and Submit */}
       <div className="actionButtonGrid">
         <ActionButton
@@ -175,20 +196,18 @@ function Game({ tilesData }) {
         <ActionButton
           onClick={handleDeselectAll}
           className="deselect_all_button"
-          disabled={selectedTiles.length < 1 || status === 'lost'}
+          disabled={selectedTiles.length < 1 || status !== 'playing'}
         >
           Deselect All
         </ActionButton>
         <ActionButton
           onClick={checkSelection}
-          disabled={selectedTiles.length !== 4 || status === 'lost'}
+          disabled={selectedTiles.length !== 4 || status !== 'playing'}
         >
           Submit
         </ActionButton>
       </div>
       <Toggle />
-
-      {/* TODO: add button to move to next game */}
     </div>
   );
 }

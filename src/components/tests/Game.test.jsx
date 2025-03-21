@@ -1,5 +1,7 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import {
+  render, screen, fireEvent, waitFor,
+} from '@testing-library/react';
 import mockTilesData from '../data/mockTileData';
 import Game from '../Game';
 
@@ -149,7 +151,7 @@ test('Game selects 4 tiles, deselects, selects 4 other tiles, and submits', () =
   });
 });
 
-test('Game prevents resubmission of previously submitted tiles', () => {
+test('Game prevents resubmission of previously submitted tiles', async () => {
   expect(getMistakesCount()).toBe(4);
   // Select 4 nonmatching tiles
   ['Apple', 'Banana', 'Mars', 'Bus'].forEach((word) => {
@@ -170,9 +172,11 @@ test('Game prevents resubmission of previously submitted tiles', () => {
 
   fireEvent.click(submitButton);
 
-  // Check for the "already selected!" message
-  const message = screen.getByText('already selected!');
-  expect(message).toBeInTheDocument();
+  // Wait for the "Already selected!" alert to appear
+  await waitFor(() => {
+    const alert = screen.getByText('Already selected!');
+    expect(alert).toBeInTheDocument();
+  });
 
   expect(getMistakesCount()).toBe(3);
 
@@ -187,12 +191,19 @@ test('Game prevents resubmission of previously submitted tiles', () => {
 
   fireEvent.click(submitButton);
 
-  expect(message).toBeInTheDocument();
+  // Wait for the "Already selected!" alert to appear
+  await waitFor(() => {
+    const alert = screen.getByText('Already selected!');
+    expect(alert).toBeInTheDocument();
+  });
+
   expect(getMistakesCount()).toBe(3);
 
   ['Apple', 'Banana', 'Mars', 'Bus'].forEach((word) => {
     expect(screen.getByText(word)).not.toHaveClass('disabled');
   });
+
+  fireEvent.click(deselectButton);
 
   // Submit different set of incorrect tiles
   ['Earth', 'Venus', 'Date', 'Banana'].forEach((word) => {
@@ -201,7 +212,12 @@ test('Game prevents resubmission of previously submitted tiles', () => {
 
   fireEvent.click(submitButton);
 
-  expect(message).not.toBeInTheDocument();
+  // Wait for the alert to disappear
+  await waitFor(() => {
+    const alert = screen.getByText('Already selected!');
+    expect(alert).toBeInTheDocument();
+  });
+
   expect(getMistakesCount()).toBe(2);
 });
 
