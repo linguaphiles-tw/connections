@@ -20,6 +20,7 @@ function Tile({
       onKeyDown={handleKeyDown}
       className={`tile ${disabled ? 'disabled' : ''}`}
       style={{ backgroundColor: colors[0], color: colors[1] }}
+      aria-disabled={disabled}
     >
       {word}
     </div>

@@ -163,8 +163,13 @@ function Game({ tilesData }) {
     return undefined;
   }, [alert]);
 
+  const handleKeyDown = (event, tile) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      handleTileSelect(tile);
+    }
+  };
   return (
-    <div className="container">
+    <main className="container">
       <h1 className="game_title">Clonections</h1>
       <div>Create four groups of four!</div>
 
@@ -176,7 +181,7 @@ function Game({ tilesData }) {
       />
 
       {/* Grid of word tiles */}
-      <div className="grid">
+      <div className="grid" role="grid">
         {shuffledTiles.map((tile) => (
           <Tile
             key={tile.word}
@@ -184,6 +189,10 @@ function Game({ tilesData }) {
             colors={getTileColors(tile)}
             onSelect={() => handleTileSelect(tile)}
             disabled={matchedTiles.includes(tile) || status === 'won' || status === 'lost'}
+            aria-label={`Tile ${tile.word}`}
+            tabIndex={0}
+            role="button"
+            onKeyDown={(event) => handleKeyDown(event, tile)}
           />
         ))}
       </div>
@@ -201,25 +210,27 @@ function Game({ tilesData }) {
 
       {/* Shuffle, Deselect all, and Submit */}
       <div className="actionButtonGrid">
-        <ActionButton onClick={handleShuffle} disabled={status === 'won' || status === 'lost'}>
+        <ActionButton onClick={handleShuffle} disabled={status === 'won' || status === 'lost'} aria-label="Shuffle tiles">
           Shuffle
         </ActionButton>
         <ActionButton
           onClick={handleDeselectAll}
           className="deselect_all_button"
           disabled={selectedTiles.length < 1 || status === 'won' || status === 'lost'}
+          aria-label="Deselect all tiles"
         >
           Deselect All
         </ActionButton>
         <ActionButton
           onClick={checkSelection}
           disabled={selectedTiles.length !== 4 || status === 'won' || status === 'lost' || status === 'wrong'}
+          aria-label="Submit selection"
         >
           Submit
         </ActionButton>
       </div>
       <Toggle />
-    </div>
+    </main>
   );
 }
 
