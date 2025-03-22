@@ -9,7 +9,7 @@ import './styles/Game.css';
 function Game({ tilesData }) {
   const [selectedTiles, setSelectedTiles] = useState([]);
   const [mistakes, setMistakes] = useState(4);
-  // possible statuses: playing, won, lost
+  // possible statuses: playing, won, lost, wrong
   const [status, setStatus] = useState('playing');
   const [matchedTiles, setMatchedTiles] = useState([]);
   const [submittedSelections, setSubmittedSelections] = useState([]);
@@ -47,14 +47,13 @@ function Game({ tilesData }) {
   const handleTileSelect = (tile) => {
     if (status === 'lost') return;
 
-    if (status === 'wrong') {
-      setStatus('playing');
-    }
-
     if (selectedTiles.includes(tile)) {
       setSelectedTiles(selectedTiles.filter((t) => t !== tile));
     } else if (!matchedTiles.includes(tile)) {
       if (selectedTiles.length < 4) {
+        if (status === 'wrong') {
+          setStatus('playing');
+        }
         setSelectedTiles([...selectedTiles, tile]);
       }
     }
@@ -168,6 +167,7 @@ function Game({ tilesData }) {
       handleTileSelect(tile);
     }
   };
+
   return (
     <main className="container">
       <h1 className="game_title">Clonections</h1>
