@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Alert from 'reactjs-alert';
@@ -15,6 +16,8 @@ function Game({ tilesData }) {
   const [submittedSelections, setSubmittedSelections] = useState([]);
   // notify user if selection has already been submitted
   const [alert, setAlert] = useState({ type: '', status: false, title: '' });
+  const [guessAnimation, setGuessAnimation] = useState({ show: false, index: -1 });
+  const [shakingTiles, setShakingTiles] = useState(false);
 
   /*
   Note: for each submitted section, the actual game saves the following:
@@ -38,6 +41,28 @@ function Game({ tilesData }) {
 
   // Shuffle tiles upon render
   const [shuffledTiles, setShuffledTiles] = useState(() => shuffleTiles([...tilesData]));
+
+  // Guess and wrong selection animations inspired by
+  // https://github.com/srefsland/nyt-connections-clone
+  const delay = (ms) => new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+
+  const animateGuess = async (tiles) => {
+    for (let i = 0; i < tiles.length; i += 1) {
+      setGuessAnimation({ show: true, index: i });
+      await delay(200);
+    }
+
+    setGuessAnimation({ show: false, index: -1 });
+    await delay(500);
+  };
+
+  const animateWrongGuess = async () => {
+    setShakingTiles(true);
+    await delay(225);
+    setShakingTiles(false);
+  };
 
   /*
   Allow tile to be selected if not a matched tile
@@ -86,7 +111,7 @@ function Game({ tilesData }) {
   // List of matched tiles followed by unmatched tiles in grid
   const reorderTiles = (matched, unmatched) => [...matched, ...unmatched];
 
-  const checkSelection = () => {
+  const checkSelection = async () => {
     if (selectedTiles.length === 4) {
       // Check if the current selection has already been submitted
       if (
@@ -95,6 +120,8 @@ function Game({ tilesData }) {
         setAlert({ type: 'error', status: true, title: 'Already selected!' });
         return;
       }
+
+      await animateGuess(selectedTiles);
 
       if (isCorrectMatch(selectedTiles)) {
         const newMatchedTiles = [...matchedTiles, ...selectedTiles];
@@ -113,6 +140,8 @@ function Game({ tilesData }) {
         }
       } else {
         // Wrong selection
+        await animateWrongGuess(selectedTiles);
+
         setMistakes((prevMistakes) => {
           const newMistakes = prevMistakes - 1;
           if (newMistakes === 0) {
@@ -189,6 +218,9 @@ function Game({ tilesData }) {
             colors={getTileColors(tile)}
             onSelect={() => handleTileSelect(tile)}
             disabled={matchedTiles.includes(tile) || status === 'won' || status === 'lost'}
+            className={`${shakingTiles && selectedTiles.includes(tile) ? 'animate-horizontal-shake' : ''} ${
+              guessAnimation.show && selectedTiles[guessAnimation.index] === tile ? 'animate-guess-animation' : ''
+            }`}
             aria-label={`Tile ${tile.word}`}
             tabIndex={0}
             role="button"
