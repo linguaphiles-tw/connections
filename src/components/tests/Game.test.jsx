@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  render, screen, fireEvent, waitFor,
+  render, screen, fireEvent, waitFor, act,
 } from '@testing-library/react';
 import mockTilesData from '../data/mockTileData';
 import Game from '../Game';
@@ -8,6 +8,8 @@ import Game from '../Game';
 // TODO: using hard-coded mock data - change to dynamic data
 let submitButton;
 let getMistakesCount;
+
+const delay = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
 
 beforeEach(() => {
   render(<Game tilesData={mockTilesData} />);
@@ -26,12 +28,15 @@ test('Game updates selected tiles correctly', () => {
   expect(tile).toHaveStyle('background-color: #5a594e');
 });
 
-test('Game disables selection of matched tiles', () => {
+test('Game disables selection of matched tiles', async () => {
   ['Apple', 'Banana', 'Cherry', 'Date'].forEach((word) => {
     fireEvent.click(screen.getByText(word));
   });
 
-  fireEvent.click(submitButton);
+  await act(async () => {
+    fireEvent.click(submitButton);
+    await delay(2000);
+  });
 
   // Cannot reselect matched tiles
   ['Apple', 'Banana', 'Cherry', 'Date'].forEach((word) => {
@@ -39,17 +44,20 @@ test('Game disables selection of matched tiles', () => {
   });
 });
 
-test('Game reduces mistakes on incorrect match', () => {
+test('Game reduces mistakes on incorrect match', async () => {
   ['Apple', 'Lion', 'Car', 'Pluto'].forEach((word) => {
     fireEvent.click(screen.getByText(word));
   });
 
-  fireEvent.click(submitButton);
+  await act(async () => {
+    fireEvent.click(submitButton);
+    await delay(2000);
+  });
 
   expect(getMistakesCount()).toBe(3);
 });
 
-test('Game shows won status when all tiles are matched', () => {
+test('Game shows won status when all tiles are matched', async () => {
   const groups = [
     ['Apple', 'Banana', 'Cherry', 'Date'],
     ['Lion', 'Tiger', 'Elephant', 'Giraffe'],
@@ -66,30 +74,36 @@ test('Game shows won status when all tiles are matched', () => {
   expect(getMistakesCount()).toBe(4);
 });
 
-test('Game deselects all tiles correctly', () => {
+test('Game deselects all tiles correctly', async () => {
   fireEvent.click(screen.getByText('Apple'));
   fireEvent.click(screen.getByText('Banana'));
-
   fireEvent.click(screen.getByText('Deselect All'));
 
   expect(screen.getByText('Apple')).toHaveStyle('background-color: #efefe6');
   expect(screen.getByText('Banana')).toHaveStyle('background-color: #efefe6');
 });
 
-test('Game prevents tile selection when lost', () => {
+test('Game prevents tile selection when lost', async () => {
   ['Apple', 'Banana', 'Date', 'Lion'].forEach((word) => {
     fireEvent.click(screen.getByText(word));
   });
 
-  fireEvent.click(submitButton);
+  await act(async () => {
+    fireEvent.click(submitButton);
+    await delay(2000);
+  });
   expect(getMistakesCount()).toBe(3);
-  fireEvent.click(screen.getByText('Deselect All'));
 
+  fireEvent.click(screen.getByText('Deselect All'));
   ['Cherry', 'Tiger', 'Banana', 'Elephant'].forEach((word) => {
     fireEvent.click(screen.getByText(word));
   });
 
-  fireEvent.click(submitButton);
+  await act(async () => {
+    fireEvent.click(submitButton);
+    await delay(2000);
+  });
+
   expect(getMistakesCount()).toBe(2);
   fireEvent.click(screen.getByText('Deselect All'));
 
@@ -97,7 +111,10 @@ test('Game prevents tile selection when lost', () => {
     fireEvent.click(screen.getByText(word));
   });
 
-  fireEvent.click(submitButton);
+  await act(async () => {
+    fireEvent.click(submitButton);
+    await delay(2000);
+  });
   expect(getMistakesCount()).toBe(1);
   fireEvent.click(screen.getByText('Deselect All'));
 
@@ -105,16 +122,19 @@ test('Game prevents tile selection when lost', () => {
     fireEvent.click(screen.getByText(word));
   });
 
-  fireEvent.click(submitButton);
+  await act(async () => {
+    fireEvent.click(submitButton);
+    await delay(2000);
+  });
   expect(getMistakesCount()).toBe(0);
 
   // Try to select tile after losing
   const tile = screen.getByText('Apple');
   fireEvent.click(tile);
   expect(tile).toHaveStyle('background-color: #efefe6');
-});
+}, 9000);
 
-test('Game selects 4 tiles, deselects, selects 4 other tiles, and submits', () => {
+test('Game selects 4 tiles, deselects, selects 4 other tiles, and submits', async () => {
   ['Apple', 'Lion', 'Bike', 'Bus'].forEach((word) => {
     fireEvent.click(screen.getByText(word));
   });
@@ -145,7 +165,11 @@ test('Game selects 4 tiles, deselects, selects 4 other tiles, and submits', () =
   fireEvent.click(screen.getByText('Apple'));
 
   // Submit the (incorrect) selected tiles
-  fireEvent.click(submitButton);
+  await act(async () => {
+    fireEvent.click(submitButton);
+    await delay(2000);
+  });
+
   ['Earth', 'Bike', 'Mars', 'Apple'].forEach((word) => {
     expect(screen.getByText(word)).not.toHaveClass('disabled');
   });
@@ -158,7 +182,10 @@ test('Game prevents resubmission of previously submitted tiles', async () => {
     fireEvent.click(screen.getByText(word));
   });
 
-  fireEvent.click(submitButton);
+  await act(async () => {
+    fireEvent.click(submitButton);
+    await delay(2000);
+  });
 
   const deselectButton = screen.getByText('Deselect All');
   fireEvent.click(deselectButton);
@@ -170,7 +197,10 @@ test('Game prevents resubmission of previously submitted tiles', async () => {
     fireEvent.click(screen.getByText(word));
   });
 
-  fireEvent.click(submitButton);
+  await act(async () => {
+    fireEvent.click(submitButton);
+    await delay(2000);
+  });
 
   // Wait for the "Already selected!" alert to appear
   await waitFor(() => {
@@ -189,7 +219,10 @@ test('Game prevents resubmission of previously submitted tiles', async () => {
     fireEvent.click(screen.getByText(word));
   });
 
-  fireEvent.click(submitButton);
+  await act(async () => {
+    fireEvent.click(submitButton);
+    await delay(2000);
+  });
 
   // Wait for the "Already selected!" alert to appear
   await waitFor(() => {
@@ -210,7 +243,10 @@ test('Game prevents resubmission of previously submitted tiles', async () => {
     fireEvent.click(screen.getByText(word));
   });
 
-  fireEvent.click(submitButton);
+  await act(async () => {
+    fireEvent.click(submitButton);
+    await delay(2000);
+  });
 
   // Wait for the alert to disappear
   await waitFor(() => {
@@ -219,13 +255,17 @@ test('Game prevents resubmission of previously submitted tiles', async () => {
   });
 
   expect(getMistakesCount()).toBe(2);
-});
+}, 10000);
 
-test('Matched tiles are moved to the top of the grid immediately after being matched', () => {
+test('Matched tiles are moved to the top of the grid immediately after being matched', async () => {
   // Select and submit a group of tiles to mark them as matched
   const matchedGroup = ['Apple', 'Banana', 'Cherry', 'Date'];
   matchedGroup.forEach((word) => fireEvent.click(screen.getByText(word)));
-  fireEvent.click(submitButton);
+
+  await act(async () => {
+    fireEvent.click(submitButton);
+    await delay(2000);
+  });
 
   // Get the positions of all tiles after matching
   const tilesAfterMatch = screen.getAllByRole('button').map((tile) => tile.textContent);
@@ -236,14 +276,18 @@ test('Matched tiles are moved to the top of the grid immediately after being mat
   });
 });
 
-test('Unmatched tiles remain in their positions relative to each other after a match is made', () => {
+test('Unmatched tiles remain in their positions relative to each other after a match is made', async () => {
   // Get the initial positions of all tiles
   const initialTiles = screen.getAllByRole('button').map((tile) => tile.textContent);
 
   // Select and submit a group of tiles to mark them as matched
   const matchedGroup = ['Apple', 'Banana', 'Cherry', 'Date'];
   matchedGroup.forEach((word) => fireEvent.click(screen.getByText(word)));
-  fireEvent.click(submitButton);
+
+  await act(async () => {
+    fireEvent.click(submitButton);
+    await delay(2000);
+  });
 
   // Get the positions of all tiles after matching
   const tilesAfterMatch = screen.getAllByRole('button').map((tile) => tile.textContent);
@@ -254,11 +298,15 @@ test('Unmatched tiles remain in their positions relative to each other after a m
   expect(unmatchedTilesAfterMatch).toEqual(unmatchedTilesInitial);
 });
 
-test('Shuffling only affects unmatched tiles and keeps matched tiles at the top', () => {
+test('Shuffling only affects unmatched tiles and keeps matched tiles at the top', async () => {
   // Select and submit a group of tiles to mark them as matched
   const matchedGroup = ['Apple', 'Banana', 'Cherry', 'Date'];
   matchedGroup.forEach((word) => fireEvent.click(screen.getByText(word)));
-  fireEvent.click(submitButton);
+
+  await act(async () => {
+    fireEvent.click(submitButton);
+    await delay(2000);
+  });
 
   // Get the positions of all tiles after matching
   const tilesAfterMatch = screen.getAllByRole('button').map((tile) => tile.textContent);
