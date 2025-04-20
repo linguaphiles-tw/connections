@@ -6,6 +6,7 @@ module.exports = {
     jest: true,
   },
   extends: [
+    'plugin:jsx-a11y/recommended',
     'plugin:react/recommended',
     'airbnb',
     'plugin:jest/recommended',
@@ -17,10 +18,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: [
-    'react',
-    'jest',
-  ],
+  plugins: ['react', 'jest', 'jsx-a11y'],
   rules: {
   },
 };
