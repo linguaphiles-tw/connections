@@ -51,11 +51,14 @@ function Game({ tilesData }) {
   // Animates selected tiles from top to bottom
   // and left to right in the grid
   const animateGuess = async (tiles) => {
-    // Map selected tiles to indices in shuffledTiles
+    // Save tiles' indices in shuffledTiles for quick lookup
+    const tileIndexMap = new Map(shuffledTiles.map((tile, index) => [tile, index]));
+
+    // Map selected tiles to indices
     const sortedSelectedTiles = tiles
       .map((tile) => ({
         tile,
-        index: shuffledTiles.indexOf(tile),
+        index: tileIndexMap.get(tile),
       }))
       .sort((a, b) => a.index - b.index);
 
