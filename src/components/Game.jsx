@@ -48,13 +48,26 @@ function Game({ tilesData }) {
     setTimeout(resolve, ms);
   });
 
+  // Animates selected tiles from top to bottom
+  // and left to right in the grid
   const animateGuess = async (tiles) => {
-    for (let i = 0; i < tiles.length; i += 1) {
-      setGuessAnimation({ show: true, index: i });
+    // Map selected tiles to indices in shuffledTiles
+    const sortedSelectedTiles = tiles
+      .map((tile) => ({
+        tile,
+        index: shuffledTiles.indexOf(tile),
+      }))
+      .sort((a, b) => a.index - b.index);
+
+    // Animate the tiles in sorted order
+    for (let i = 0; i < sortedSelectedTiles.length; i += 1) {
+      setGuessAnimation({ show: true, index: sortedSelectedTiles[i].index });
+      // Delay between tiles
       await delay(200);
     }
 
     setGuessAnimation({ show: false, index: -1 });
+    // Delay before next animation
     await delay(500);
   };
 
@@ -219,7 +232,7 @@ function Game({ tilesData }) {
             onSelect={() => handleTileSelect(tile)}
             disabled={matchedTiles.includes(tile) || status === 'won' || status === 'lost'}
             className={`${shakingTiles && selectedTiles.includes(tile) ? 'animate-horizontal-shake' : ''} ${
-              guessAnimation.show && selectedTiles[guessAnimation.index] === tile ? 'animate-guess-animation' : ''
+              guessAnimation.show && guessAnimation.index === shuffledTiles.indexOf(tile) ? 'animate-guess-animation' : ''
             }`}
             aria-label={`Tile ${tile.word}`}
             tabIndex={0}

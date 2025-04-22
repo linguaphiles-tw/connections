@@ -29,7 +29,7 @@ module.exports = {
       },
       animation: {
         'horizontal-shake': 'horizontal-shake 0.2s ease-in-out infinite',
-        'guess-animation': 'guess-animation 0.4s ease-in-out',
+        'guess-animation': 'guess-animation 0.2s ease-in-out',
       },
     },
   },
