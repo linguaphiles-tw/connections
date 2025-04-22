@@ -2,7 +2,7 @@
 
 ⚠️ **Note:** This project is currently a work in progress!
 
-<img width="702" alt="Screenshot 2025-02-19 at 8 18 01 PM" src="https://github.com/user-attachments/assets/956b709e-c317-49bd-bb6e-e627ef5c0d59" />
+<img width="687" alt="Screenshot 2025-04-21 at 10 48 14 PM" src="https://github.com/user-attachments/assets/39ffb7bf-d185-4726-a647-2d449015e4d4" />
 
 # TODO:
 
