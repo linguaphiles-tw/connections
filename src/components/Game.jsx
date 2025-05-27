@@ -10,6 +10,7 @@ import './styles/Game.css';
 function Game({ tilesData }) {
   const [selectedTiles, setSelectedTiles] = useState([]);
   const [mistakes, setMistakes] = useState(4);
+  const [removingMistake, setRemovingMistake] = useState(null);
   // possible statuses: playing, won, lost, wrong
   const [status, setStatus] = useState('playing');
   const [matchedTiles, setMatchedTiles] = useState([]);
@@ -158,15 +159,23 @@ function Game({ tilesData }) {
         // Wrong selection
         await animateWrongGuess(selectedTiles);
 
-        setMistakes((prevMistakes) => {
-          const newMistakes = prevMistakes - 1;
-          if (newMistakes === 0) {
-            setStatus('lost');
-          } else {
-            setStatus('wrong');
-          }
-          return newMistakes;
-        });
+        const newMistakes = mistakes - 1;
+
+        // Set the index of the mistake being removed
+        setRemovingMistake(newMistakes);
+
+        // Wait for animation to finish before decrementing mistakes
+        // and updating status
+        setTimeout(() => {
+          setRemovingMistake(null);
+          setMistakes(newMistakes);
+        }, 300);
+
+        if (newMistakes === 0) {
+          setStatus('lost');
+        } else {
+          setStatus('wrong');
+        }
       }
       setSubmittedSelections([...submittedSelections, selectedTiles]);
     }
@@ -250,7 +259,11 @@ function Game({ tilesData }) {
           Mistakes Remaining:&nbsp;
           <span className="mistakesRemaining">
             {Array.from({ length: mistakes }, (_, index) => (
-              <span key={index} className="circle" data-testid="mistake" />
+              <span
+                key={index}
+                className={`circle ${removingMistake === index ? 'animate-fade-out' : ''}`}
+                data-testid="mistake"
+              />
             ))}
           </span>
         </div>

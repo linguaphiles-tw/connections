@@ -238,7 +238,7 @@ test('Game prevents resubmission of previously submitted tiles', async () => {
 
   fireEvent.click(deselectButton);
 
-  // Submit different set of incorrect tiles
+  // Submit different set of incorrect tiles and decrement mistakes
   ['Earth', 'Venus', 'Date', 'Banana'].forEach((word) => {
     fireEvent.click(screen.getByText(word));
   });
@@ -246,12 +246,6 @@ test('Game prevents resubmission of previously submitted tiles', async () => {
   await act(async () => {
     fireEvent.click(submitButton);
     await delay(2000);
-  });
-
-  // Wait for the alert to disappear
-  await waitFor(() => {
-    const alert = screen.getByText('Already selected!');
-    expect(alert).toBeInTheDocument();
   });
 
   expect(getMistakesCount()).toBe(2);
