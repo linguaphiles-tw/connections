@@ -10,9 +10,7 @@
 - [ ] Display theme of matched tiles in a row
 - [ ] Show the correct matches after the user has lost
 - [ ] Provide option to move on to another game with different tiles after completing the current game
-- [ ] Add animations for
-  - [ ] tile matching
-  - [ ] losing remaining mistakes
+- [ ] Add animations for tile matching
 - [ ] Add confetti
 
 ## Available Scripts
