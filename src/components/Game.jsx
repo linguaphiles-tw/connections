@@ -6,6 +6,7 @@ import Tile from './Tile';
 import ActionButton from './ActionButton';
 import Toggle from './Toggle';
 import './styles/Game.css';
+import SolvedCategory from './SolvedCategory';
 
 function Game({ tilesData }) {
   const [selectedTiles, setSelectedTiles] = useState([]);
@@ -13,7 +14,12 @@ function Game({ tilesData }) {
   const [removingMistake, setRemovingMistake] = useState(null);
   // possible statuses: playing, won, lost, wrong
   const [status, setStatus] = useState('playing');
+  // TODO: remove matchedTiles at some point
   const [matchedTiles, setMatchedTiles] = useState([]);
+  const [solvedCategories, setSolvedCategories] = useState([]);
+  const [newSolvedTheme, setNewSolvedTheme] = useState({
+    theme: '', title: '', words: [], category: '',
+  });
   const [submittedSelections, setSubmittedSelections] = useState([]);
   // notify user if selection has already been submitted
   const [alert, setAlert] = useState({ type: '', status: false, title: '' });
@@ -124,10 +130,6 @@ function Game({ tilesData }) {
     return sortedWords1.every((word, index) => word === sortedWords2[index]);
   };
 
-  // TODO: display theme of matched tiles
-  // List of matched tiles followed by unmatched tiles in grid
-  const reorderTiles = (matched, unmatched) => [...matched, ...unmatched];
-
   const checkSelection = async () => {
     if (selectedTiles.length === 4) {
       // Check if the current selection has already been submitted
@@ -143,10 +145,29 @@ function Game({ tilesData }) {
       if (isCorrectMatch(selectedTiles)) {
         const newMatchedTiles = [...matchedTiles, ...selectedTiles];
         setMatchedTiles(newMatchedTiles);
+
+        const { theme } = selectedTiles[0];
+        const { category } = selectedTiles[0];
+        const words = selectedTiles.map((t) => t.word);
+
+        // Check for duplicate catgeories
+        setSolvedCategories((prev) => (prev.some((cat) => cat.theme === theme)
+          ? prev
+          : [...prev, {
+            theme, title: theme, words, category,
+          }]));
+
+        // Animate pulse effect for the solved category
+        setNewSolvedTheme(theme);
+
+        setTimeout(() => {
+          setNewSolvedTheme('');
+        }, 300);
+
         const unmatchedTiles = shuffledTiles.filter(
           (tile) => !newMatchedTiles.includes(tile),
         );
-        setShuffledTiles(reorderTiles(newMatchedTiles, unmatchedTiles));
+        setShuffledTiles(unmatchedTiles);
 
         // Clear selection after a correct match
         setSelectedTiles([]);
@@ -187,7 +208,7 @@ function Game({ tilesData }) {
       (tile) => !matchedTiles.includes(tile),
     );
     const shuffledUnmatched = shuffleTiles(unmatchedTiles);
-    setShuffledTiles(reorderTiles(matchedTiles, shuffledUnmatched));
+    setShuffledTiles(shuffledUnmatched);
   };
 
   const handleDeselectAll = () => {
@@ -196,9 +217,6 @@ function Game({ tilesData }) {
 
   // Change color of tiles when selected
   const getTileColors = (tile) => {
-    if (matchedTiles.includes(tile)) {
-      return tile.colors;
-    }
     if (selectedTiles.includes(tile)) {
       return ['#5a594e', '#fff'];
     }
@@ -236,6 +254,13 @@ function Game({ tilesData }) {
 
       {/* Grid of word tiles */}
       <div className="grid" role="grid">
+        {solvedCategories.map((cat) => (
+          <SolvedCategory
+            key={cat.theme}
+            tile={cat}
+            className={`${newSolvedTheme === cat.theme ? 'animate-pulse' : ''}`}
+          />
+        ))}
         {shuffledTiles.map((tile) => (
           <Tile
             key={tile.word}
@@ -300,7 +325,6 @@ Game.propTypes = {
     PropTypes.shape({
       word: PropTypes.string.isRequired,
       theme: PropTypes.string.isRequired,
-      colors: PropTypes.arrayOf(PropTypes.string).isRequired,
     }),
   ).isRequired,
 };

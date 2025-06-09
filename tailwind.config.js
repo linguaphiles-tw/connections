@@ -40,11 +40,26 @@ module.exports = {
             transform: 'scale(0.8)',
           },
         },
+        pulse: {
+          '0%': {
+            transform: 'scaleY(1) scaleX(1)',
+          },
+          '40%': {
+            transform: 'scaleY(1.2) scaleX(1.2)',
+          },
+          '70%': {
+            transform: 'scaleY(1.2) scaleX(1.2)',
+          },
+          '100%': {
+            transform: 'scaleY(1) scaleX(1)', zIndex: 4,
+          },
+        },
       },
       animation: {
         'horizontal-shake': 'horizontal-shake 0.2s ease-in-out infinite',
         'guess-animation': 'guess-animation 0.2s ease-in-out',
         'fade-out': 'fade-out 0.8s ease-out',
+        pulse: 'pulse 0.3s linear 1',
       },
     },
   },
