@@ -5,8 +5,8 @@ import Alert from 'reactjs-alert';
 import Tile from './Tile';
 import ActionButton from './ActionButton';
 import Toggle from './Toggle';
-import './styles/Game.css';
 import SolvedCategory from './SolvedCategory';
+import './styles/Game.css';
 
 function Game({ tilesData }) {
   const [selectedTiles, setSelectedTiles] = useState([]);
@@ -14,12 +14,8 @@ function Game({ tilesData }) {
   const [removingMistake, setRemovingMistake] = useState(null);
   // possible statuses: playing, won, lost, wrong
   const [status, setStatus] = useState('playing');
-  // TODO: remove matchedTiles at some point
-  const [matchedTiles, setMatchedTiles] = useState([]);
   const [solvedCategories, setSolvedCategories] = useState([]);
-  const [newSolvedTheme, setNewSolvedTheme] = useState({
-    theme: '', title: '', words: [], category: '',
-  });
+  const [newSolvedTheme, setNewSolvedTheme] = useState('');
   const [submittedSelections, setSubmittedSelections] = useState([]);
   // notify user if selection has already been submitted
   const [alert, setAlert] = useState({ type: '', status: false, title: '' });
@@ -97,18 +93,16 @@ function Game({ tilesData }) {
 
     if (selectedTiles.includes(tile)) {
       setSelectedTiles(selectedTiles.filter((t) => t !== tile));
-    } else if (!matchedTiles.includes(tile)) {
-      if (selectedTiles.length < 4) {
-        if (status === 'wrong') {
-          setStatus('playing');
-        }
-        setSelectedTiles([...selectedTiles, tile]);
+    } else if (selectedTiles.length < 4) {
+      if (status === 'wrong') {
+        setStatus('playing');
       }
+      setSelectedTiles([...selectedTiles, tile]);
     }
   };
 
   // TODO: handle case when 3/4 tiles are matching
-  // Checks if all 4 files match (have the same theme)
+  // Checks if all 4 tiles match (have the same theme)
   const isCorrectMatch = (tiles) => {
     if (tiles.length !== 4) return false;
     const { theme } = tiles[0];
@@ -143,9 +137,6 @@ function Game({ tilesData }) {
       await animateGuess(selectedTiles);
 
       if (isCorrectMatch(selectedTiles)) {
-        const newMatchedTiles = [...matchedTiles, ...selectedTiles];
-        setMatchedTiles(newMatchedTiles);
-
         const { theme } = selectedTiles[0];
         const { category } = selectedTiles[0];
         const words = selectedTiles.map((t) => t.word);
@@ -165,7 +156,7 @@ function Game({ tilesData }) {
         }, 300);
 
         const unmatchedTiles = shuffledTiles.filter(
-          (tile) => !newMatchedTiles.includes(tile),
+          (tile) => !selectedTiles.includes(tile),
         );
         setShuffledTiles(unmatchedTiles);
 
@@ -173,7 +164,7 @@ function Game({ tilesData }) {
         setSelectedTiles([]);
 
         // If all tiles are matched, game is won
-        if (newMatchedTiles.length === tilesData.length) {
+        if (unmatchedTiles.length === 0) {
           setStatus('won');
         }
       } else {
@@ -204,10 +195,7 @@ function Game({ tilesData }) {
 
   // Action button handling (Submit, Shuffle, Deselect all)
   const handleShuffle = () => {
-    const unmatchedTiles = shuffledTiles.filter(
-      (tile) => !matchedTiles.includes(tile),
-    );
-    const shuffledUnmatched = shuffleTiles(unmatchedTiles);
+    const shuffledUnmatched = shuffleTiles(shuffledTiles);
     setShuffledTiles(shuffledUnmatched);
   };
 
@@ -259,6 +247,7 @@ function Game({ tilesData }) {
             key={cat.theme}
             tile={cat}
             className={`${newSolvedTheme === cat.theme ? 'animate-pulse' : ''}`}
+            aria-label={`Solved category ${cat.theme} with words ${cat.words.join(', ')}`}
           />
         ))}
         {shuffledTiles.map((tile) => (
@@ -267,7 +256,7 @@ function Game({ tilesData }) {
             word={tile.word}
             colors={getTileColors(tile)}
             onSelect={() => handleTileSelect(tile)}
-            disabled={matchedTiles.includes(tile) || status === 'won' || status === 'lost'}
+            disabled={status === 'won' || status === 'lost'}
             className={`${shakingTiles && selectedTiles.includes(tile) ? 'animate-horizontal-shake' : ''} ${
               guessAnimation.show && guessAnimation.index === shuffledTiles.indexOf(tile) ? 'animate-guess-animation' : ''
             }`}
@@ -325,6 +314,8 @@ Game.propTypes = {
     PropTypes.shape({
       word: PropTypes.string.isRequired,
       theme: PropTypes.string.isRequired,
+      category: PropTypes.number.isRequired,
+      colors: PropTypes.arrayOf(PropTypes.string),
     }),
   ).isRequired,
 };
