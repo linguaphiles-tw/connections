@@ -33,34 +33,30 @@
 }
 
 .solvedCategory {
-  grid-column: 1 / -1;
-  width: 100%;
-  min-width: 0;
-  height: 80px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  border-radius: 6px;
-  font-family: Arial;
-  font-size: 20px;
-  line-height: 25px;
-  z-index: 1;
-  animation-fill-mode: forwards;
-  overflow: hidden;
-  text-transform: uppercase;
+	grid-column: 1 / -1;
+	width: 100%;
+	min-width: 0;
+	height: 80px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	border-radius: 6px;
+	font-family: Arial;
+	font-size: 20px;
+	line-height: 25px;
+	z-index: 1;
+	animation-fill-mode: forwards;
+	overflow: hidden;
+	text-transform: uppercase;
 }
 
-/*
-  @media (max-width: $narrow-design-width) {
-	.solvedCategoriesContainer {
-	  margin: var(--vertical-spacing-2-5) auto;
-	  width: calc(3 * #{$card-gap} + 4 * #{$card-height-width-small});
-	  height: calc(3 * #{$card-gap} + 4 * #{$card-height-width-small});
-	  gap: #{$card-gap};
+@media (max-width: 600px) {
+	.solvedCategory {
+		grid-column: 1 / -1;
+		width: 100%;
+		min-width: 0;
+		height: 80px;
+		display: flex;
 	}
-  
-	.solvedCategoriesContainer {
-	  margin: 0 auto;
-	}
-  } */
+}

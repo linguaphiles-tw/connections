@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React from 'react';
 import PropTypes from 'prop-types';
 import './styles/SolvedCategory.css';
@@ -23,7 +24,7 @@ SolvedCategory.propTypes = {
     words: PropTypes.arrayOf(PropTypes.string).isRequired,
     title: PropTypes.string,
   }).isRequired,
-  className: PropTypes.string.isRequired,
+  className: PropTypes.string,
 };
 
 export default SolvedCategory;
