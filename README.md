@@ -7,10 +7,8 @@
 # TODO:
 
 - [ ] If 3/4 tiles selected are matching, keep those tiles selected and display hint that the user is '1 tile away'
-- [ ] Display theme of matched tiles in a row
 - [ ] Show the correct matches after the user has lost
 - [ ] Provide option to move on to another game with different tiles after completing the current game
-- [ ] Add animations for tile matching
 - [ ] Add confetti
 
 ## Available Scripts
