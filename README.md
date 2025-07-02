@@ -42,4 +42,4 @@ Deploy app to Github Pages (following [this tutorial](https://github.com/gitname
 
 [Abbey Perini](https://abbeyperini.dev) for the dark mode toggle button!
 
-[https://github.com/srefsland/nyt-connections-clone](nyt-connections-clone) for guess and wrong submission animations!
+[https://github.com/srefsland/nyt-connections-clone](https://github.com/srefsland/nyt-connections-clone) for guess and wrong submission animations!
