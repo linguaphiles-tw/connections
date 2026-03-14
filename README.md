@@ -1,9 +1,9 @@
-[New York Times Connections Game](https://www.nytimes.com/games/connections) clone
+[New York Times Connections Game](https://www.nytimes.com/games/connections) clone, but contains the levels crafted by our fellow Linguaphiles.
 
-⚠️ **Note:** This project is currently a work in progress!
+⚠️ **Note:** This project is a fork from @lk101101. Thanks for your work!
 
 <img width="687" alt="Screenshot 2025-04-21 at 10 48 14 PM" src="https://github.com/user-attachments/assets/39ffb7bf-d185-4726-a647-2d449015e4d4" />
-
+<!--
 # TODO:
 
 - [ ] If 3/4 tiles selected are matching, keep those tiles selected and display hint that the user is '1 tile away'
@@ -42,4 +42,4 @@ Deploy app to Github Pages (following [this tutorial](https://github.com/gitname
 
 [Abbey Perini](https://abbeyperini.dev) for the dark mode toggle button!
 
-[https://github.com/srefsland/nyt-connections-clone](https://github.com/srefsland/nyt-connections-clone) for guess and wrong submission animations!
+[https://github.com/srefsland/nyt-connections-clone](https://github.com/srefsland/nyt-connections-clone) for guess and wrong submission animations!-->
