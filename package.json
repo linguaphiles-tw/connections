@@ -1,8 +1,8 @@
 {
-  "name": "clonections",
+  "name": "connections",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://lk101101.github.io/clonections",
+  "homepage": "https://linguaphiles-tw.github.io/connections",
   "dependencies": {
     "@tailwindcss/vite": "^4.1.4",
     "@testing-library/jest-dom": "^6.6.3",

@@ -8,7 +8,7 @@ import Toggle from './Toggle';
 import SolvedCategory from './SolvedCategory';
 import './styles/Game.css';
 
-function Game({ tilesData }) {
+function Game({ allLevels, level }) {
   const [selectedTiles, setSelectedTiles] = useState([]);
   const [mistakes, setMistakes] = useState(4);
   const [removingMistake, setRemovingMistake] = useState(null);
@@ -22,6 +22,12 @@ function Game({ tilesData }) {
   const [guessAnimation, setGuessAnimation] = useState({ show: false, index: -1 });
   const [shakingTiles, setShakingTiles] = useState(false);
 
+  const tilesData = allLevels[level].content.flatMap((theme) => theme.words.map((word) => ({
+    word,
+    theme: theme.theme,
+    category: theme.category,
+    colors: theme.colors,
+  })));
   /*
   Note: for each submitted section, the actual game saves the following:
   - correct (bool)
@@ -310,14 +316,31 @@ function Game({ tilesData }) {
 }
 
 Game.propTypes = {
-  tilesData: PropTypes.arrayOf(
+  allLevels: PropTypes.arrayOf(
     PropTypes.shape({
-      word: PropTypes.string.isRequired,
-      theme: PropTypes.string.isRequired,
-      category: PropTypes.number.isRequired,
-      colors: PropTypes.arrayOf(PropTypes.string),
+      levelName: PropTypes.string,
+      content: PropTypes.arrayOf(
+        PropTypes.shape({
+          theme: PropTypes.string.isRequired,
+          category: PropTypes.number.isRequired,
+          words: PropTypes.arrayOf(PropTypes.string).isRequired,
+          colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+        }),
+      ),
     }),
   ).isRequired,
+  level: PropTypes.number.isRequired,
 };
+
+// Game.propTypes = {
+//   tilesData: PropTypes.arrayOf(
+//     PropTypes.shape({
+//       word: PropTypes.string.isRequired,
+//       theme: PropTypes.string.isRequired,
+//       category: PropTypes.number.isRequired,
+//       colors: PropTypes.arrayOf(PropTypes.string),
+//     }),
+//   ).isRequired,
+// };
 
 export default Game;
